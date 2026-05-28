@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,31 +111,14 @@
     document.getElementById('detailDate').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  // Build .ics calendar file as a data URI — works on Apple, Google, Outlook
+  // Build Google Calendar URL — works on iPhone and Android, opens in browser
   function buildCalendarLink(currentCode, newCode) {
     const d = new Date(date || new Date());
     const pad = n => String(n).padStart(2, '0');
-    const fmt = dt => `${dt.getFullYear()}${pad(dt.getMonth()+1)}${pad(dt.getDate())}T090000`;
-    const fmtEnd = dt => {
-      const end = new Date(dt);
-      end.setHours(end.getHours() + 3);
-      return `${end.getFullYear()}${pad(end.getMonth()+1)}${pad(end.getDate())}T120000`;
-    };
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Agatha Living//EN',
-      'BEGIN:VEVENT',
-      `DTSTART:${fmt(d)}`,
-      `DTEND:${fmtEnd(d)}`,
-      `SUMMARY:Cleaning Job — Agatha Living`,
-      `LOCATION:${address}`,
-      `DESCRIPTION:Property: ${address}\\nDuration: ${duration}\\nPayment: ${payment}\\nGuest lockbox — current code: ${currentCode} → change to: ${newCode}\\nPlease send before & after photos via WhatsApp.`,
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    const fmt = dt => `${dt.getFullYear()}${pad(dt.getMonth()+1)}${pad(dt.getDate())}T090000Z`;
+    const fmtEnd = dt => `${dt.getFullYear()}${pad(dt.getMonth()+1)}${pad(dt.getDate())}T120000Z`;
+    const details = `Property: ${address}\nDuration: ${duration}\nPayment: ${payment}\nGuest lockbox — current code: ${currentCode} → change to: ${newCode}\nSend before & after photos via WhatsApp.`;
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cleaning+Job+%E2%80%94+Agatha+Living&dates=${fmt(d)}/${fmtEnd(d)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(address)}`;
   }
 
   function buildConfirmMessage(currentCode, newCode, calLink) {
