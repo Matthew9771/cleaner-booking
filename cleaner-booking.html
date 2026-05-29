@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agatha Living — Cleaning Job</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="booking" data-webhook="https://hook.eu1.make.com/jcyiowindg8otr6l35fprgdery9naikb" data-base-url="https://matthew9771.github.io/cleaner-booking/confirm-job.html" data-primary="447307215813" data-backup="447432721130">
+<div class="logo">Agatha Living<span>Property Operations</span></div>
+
+<div class="card" id="mainCard">
+  <div class="job-badge">🧹 New Cleaning Job</div>
+  <h1>Confirm Cleaner Booking</h1>
+  <div class="details">
+    <div class="detail-row"><span class="detail-icon">🏠</span><span class="detail-label">Property</span><span class="detail-value" id="detailAddress">62 Greystead Road, Forest Hill, SE23 3SD</span></div>
+    <div class="detail-row"><span class="detail-icon">📅</span><span class="detail-label">Date</span><span class="detail-value" id="detailDate">—</span></div>
+    <div class="detail-row"><span class="detail-icon">⏱</span><span class="detail-label">Duration</span><span class="detail-value" id="detailDuration">3 hours</span></div>
+    <div class="detail-row"><span class="detail-icon">💷</span><span class="detail-label">Payment</span><span class="detail-value" id="detailPayment">£60</span></div>
+  </div>
+  <div class="divider"></div>
+  <p class="code-section-title">🔒 Guest Lockbox Codes</p>
+  <div class="code-block">
+    <p class="code-block-label">Current guest code</p>
+    <p class="code-block-sub">The code currently set on the guest lockbox</p>
+    <input type="text" id="currentCode" placeholder="e.g. 4821" maxlength="10" autocomplete="off" />
+  </div>
+  <div class="arrow-divider">↓ change to ↓</div>
+  <div class="code-block">
+    <p class="code-block-label">New guest code (from Airbnb)</p>
+    <p class="code-block-sub">The new code for this guest — set this during the clean</p>
+    <input type="text" id="newCode" placeholder="e.g. 9134" maxlength="10" autocomplete="off" />
+  </div>
+  <div class="actions">
+    <button class="btn btn-yes" onclick="respond('yes')">✅ YES</button>
+    <button class="btn btn-no" onclick="respond('no')">❌ NO</button>
+  </div>
+</div>
+
+<div class="card success-state" id="successCard">
+  <div class="success-card" id="successContent"></div>
+</div>
+
+<p class="footer">Agatha Living Ltd · Automated by Make.com</p>
+
+<script defer src="scripts.js"></script>
+</body>
+</html>
