@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agatha Living — Confirm Today's Clean</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --cream: #FAF7F2; --ink: #1A1714; --warm-grey: #8C8580; --accent: #C4956A; --green: #2D6A4F; --red: #C0392B; --border: #E8E2D9; --card: #FFFFFF; }
+  body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: 0.04em; color: var(--accent); margin-bottom: 32px; text-align: center; }
+  .logo span { display: block; font-size: 11px; font-family: 'DM Sans', sans-serif; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-grey); margin-top: 4px; }
+  .card { background: var(--card); border-radius: 16px; padding: 32px 28px; width: 100%; max-width: 420px; box-shadow: 0 4px 32px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .job-badge { display: inline-flex; align-items: center; gap: 6px; background: #FFF8EE; border: 1px solid #F0D9B5; border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1.2; color: var(--ink); margin-bottom: 20px; }
+  .details { background: var(--cream); border-radius: 10px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+  .detail-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 14px; }
+  .detail-row + .detail-row { border-top: 1px solid var(--border); }
+  .detail-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .detail-label { color: var(--warm-grey); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; min-width: 75px; flex-shrink: 0; padding-top: 1px; }
+  .detail-value { font-weight: 500; color: var(--ink); font-size: 14px; }
+  .detail-value.code { font-size: 16px; font-weight: 700; letter-spacing: 0.15em; color: var(--accent); }
+  .lockbox-note { font-size: 12px; color: var(--warm-grey); background: #FFF8EE; border: 1px solid #F0D9B5; border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .question { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 16px; text-align: center; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn { padding: 16px 12px; border-radius: 10px; border: none; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-yes { background: var(--green); color: white; box-shadow: 0 4px 16px rgba(45,106,79,0.25); }
+  .btn-yes:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(45,106,79,0.35); transform: translateY(-1px); }
+  .btn-no { background: white; color: var(--red); border: 2px solid #F0C4BF; }
+  .btn-no:hover:not(:disabled) { background: #FDF5F4; transform: translateY(-1px); }
+  .result { display: none; text-align: center; padding: 16px 0 8px; }
+  .result-icon { font-size: 56px; margin-bottom: 16px; display: block; }
+  .result h2 { font-family: 'DM Serif Display', serif; font-size: 24px; margin-bottom: 12px; }
+  .result p { color: var(--warm-grey); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+  .wa-btn { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: white; padding: 14px 22px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 15px; box-shadow: 0 4px 16px rgba(37,211,102,0.25); transition: transform 0.15s; }
+  .wa-btn:hover { transform: translateY(-1px); }
+  .footer { margin-top: 24px; font-size: 11px; color: var(--warm-grey); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<div class="logo">Agatha Living<span>Property Operations</span></div>
+
+<div class="card">
+  <div id="mainContent">
+    <div class="job-badge">🧹 Today's Clean</div>
+    <h1>Can you confirm today's job?</h1>
+    <div class="details">
+      <div class="detail-row"><span class="detail-icon">🏠</span><span class="detail-label">Property</span><span class="detail-value" id="detailAddress">62 Greystead Road, Forest Hill, SE23 3SD</span></div>
+      <div class="detail-row"><span class="detail-icon">📅</span><span class="detail-label">Date</span><span class="detail-value" id="detailDate">Today</span></div>
+      <div class="detail-row"><span class="detail-icon">⏰</span><span class="detail-label">Arrive</span><span class="detail-value">From 11:00am</span></div>
+      <div class="detail-row"><span class="detail-icon">⏰</span><span class="detail-label">Ready by</span><span class="detail-value">3:00pm</span></div>
+      <div class="detail-row"><span class="detail-icon">⏱</span><span class="detail-label">Duration</span><span class="detail-value" id="detailDuration">3 hours</span></div>
+      <div class="detail-row"><span class="detail-icon">💷</span><span class="detail-label">Payment</span><span class="detail-value" id="detailPayment">£60</span></div>
+    </div>
+    <div class="details" id="lockboxSection">
+      <div class="detail-row"><span class="detail-icon">🔒</span><span class="detail-label">Current code</span><span class="detail-value code" id="detailCurrentCode">—</span></div>
+      <div class="detail-row"><span class="detail-icon">🔑</span><span class="detail-label">Change to</span><span class="detail-value code" id="detailNewCode">—</span></div>
+    </div>
+    <p class="lockbox-note">⚠️ Please update the guest lockbox to the new code before you leave so the guest can access the property.</p>
+    <p class="question">Are you still good to go today?</p>
+    <div class="actions">
+      <button class="btn btn-yes" onclick="respond('yes')">✅ Yes, confirmed!</button>
+      <button class="btn btn-no" onclick="respond('no')">❌ Can't make it</button>
+    </div>
+  </div>
+
+  <div class="result" id="resultContent"></div>
+</div>
+
+<p class="footer">Agatha Living Ltd · Property Operations</p>
+
+<script>
+  const WEBHOOK = 'https://hook.eu1.make.com/7gu2p83oekw0q82k2iwhttytn6qwgujj';
+  const MATTHEW = '447405803252'; // Agatha Living WhatsApp
+
+  const params = new URLSearchParams(window.location.search);
+  const date = params.get('date') || '';
+  const address = params.get('address') || '62 Greystead Road, Forest Hill, SE23 3SD';
+  const duration = params.get('duration') || '3 hours';
+  const payment = params.get('payment') || '£60';
+  const currentCode = params.get('currentCode') || '';
+  const newCode = params.get('newCode') || '';
+
+  document.getElementById('detailAddress').textContent = address;
+  document.getElementById('detailDuration').textContent = duration;
+  document.getElementById('detailPayment').textContent = payment;
+  document.getElementById('detailCurrentCode').textContent = currentCode || '—';
+  document.getElementById('detailNewCode').textContent = newCode || '—';
+
+  if (date) {
+    const d = new Date(date);
+    document.getElementById('detailDate').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  async function respond(answer) {
+    document.querySelectorAll('.btn').forEach(b => b.disabled = true);
+    fetch(`${WEBHOOK}?response=${answer}&date=${encodeURIComponent(date)}&address=${encodeURIComponent(address)}&duration=${encodeURIComponent(duration)}&payment=${encodeURIComponent(payment)}&currentCode=${encodeURIComponent(currentCode)}&newCode=${encodeURIComponent(newCode)}`, { mode: 'no-cors', keepalive: true }).catch(() => {});
+
+    document.getElementById('mainContent').style.display = 'none';
+    const result = document.getElementById('resultContent');
+    result.style.display = 'block';
+
+    if (answer === 'yes') {
+      const confirmMsg = encodeURIComponent(`Hi Matthew 👋 Confirmed for today's clean!\n\n🏠 *Property:* ${address}\n⏰ *Arriving from:* 11:00am\n✅ See you soon! 🙌`);
+      result.innerHTML = `
+        <span class="result-icon">🙌</span>
+        <h2>Thank you for confirming!</h2>
+        <p>You're all set for today's clean at <strong>${address}</strong>.<br><br>
+        Arrive from <strong>11:00am</strong> and have the property ready by <strong>3:00pm</strong>.<br><br>
+        Remember to update the guest lockbox to <strong>${newCode || 'the new code'}</strong> before you leave.<br><br>
+        Please tap below to send your confirmation:</p>
+        <a href="https://wa.me/${MATTHEW}?text=${confirmMsg}" class="wa-btn">📲 Send Confirmation to Agatha Living</a>
+      `;
+    } else {
+      result.innerHTML = `
+        <span class="result-icon">😔</span>
+        <h2>No problem, thanks for letting us know</h2>
+        <p>We're sorry to hear you can't make it today. We'll arrange cover as soon as possible.<br><br>
+        We hope everything is okay — speak soon.<br><br>
+        — Agatha Living</p>
+      `;
+    }
+  }
+</script>
+</body>
+</html>
