@@ -266,7 +266,24 @@ function handleConfirmResponse(answer) {
   }
 }
 
+function ensureFooter() {
+  const footerText = '© 2026 Agatha Living. All rights reserved.';
+  const existingFooter = document.querySelector('.footer');
+  if (existingFooter) {
+    if (existingFooter.textContent.trim() !== footerText) {
+      existingFooter.textContent = footerText;
+    }
+    return;
+  }
+
+  const footer = document.createElement('p');
+  footer.className = 'footer';
+  footer.textContent = footerText;
+  document.body.appendChild(footer);
+}
+
 function runPage() {
+  ensureFooter();
   if (pageType === 'booking') initBookingPage();
   if (pageType === 'offer') initOfferPage();
   if (pageType === 'confirm') initConfirmPage();
