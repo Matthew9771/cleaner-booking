@@ -1,0 +1,14 @@
+node_modules
+.npm-cache
+.next
+.next-local
+out
+.env
+.env*.local
+*.tsbuildinfo
+.netlify
+.vercel
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
