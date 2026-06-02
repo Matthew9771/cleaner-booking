@@ -21,6 +21,10 @@ export async function createProperty(formData: FormData) {
   const { supabase } = await requireUser();
   const name = String(formData.get("name") || "").trim();
   const address = String(formData.get("address") || "").trim();
+  const bedroomsValue = String(formData.get("bedrooms") || "").trim();
+  const bathroomsValue = String(formData.get("bathrooms") || "").trim();
+  const bedrooms = bedroomsValue ? Number(bedroomsValue) : null;
+  const bathrooms = bathroomsValue ? Number(bathroomsValue) : null;
   const notes = String(formData.get("notes") || "").trim() || null;
 
   if (!name || !address) {
@@ -30,6 +34,8 @@ export async function createProperty(formData: FormData) {
   await supabase.from("properties").insert({
     name,
     address,
+    bedrooms: Number.isFinite(bedrooms) ? bedrooms : null,
+    bathrooms: Number.isFinite(bathrooms) ? bathrooms : null,
     notes
   });
 

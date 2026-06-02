@@ -64,7 +64,7 @@ export default async function CleanerCalendarPage({ searchParams }: CleanerCalen
   const [{ data: jobs }, { data: unavailableDays }, { data: cleanerSettings }] = await Promise.all([
     supabase
       .from("cleaning_jobs")
-      .select("id, job_date, status, payment_pence, public_offer_token, cleaner_id, properties(name, address)")
+      .select("id, booking_id, job_date, status, payment_pence, public_offer_token, cleaner_id, properties(name, address)")
       .or(`cleaner_id.eq.${cleaner.id},and(cleaner_id.is.null,status.eq.draft)`)
       .gte("job_date", gridStart)
       .lte("job_date", gridEnd)
@@ -99,6 +99,7 @@ export default async function CleanerCalendarPage({ searchParams }: CleanerCalen
 
     return {
       id: job.id,
+      booking_id: job.booking_id,
       job_date: job.job_date,
       payment_pence: job.payment_pence,
       public_offer_token: job.public_offer_token,

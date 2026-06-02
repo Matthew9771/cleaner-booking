@@ -276,6 +276,16 @@ export default async function DashboardPage() {
               Address
               <input name="address" placeholder="62 Greystead Road, Forest Hill, SE23 3SD" required type="text" />
             </label>
+            <div className="form-grid two">
+              <label>
+                Bedrooms
+                <input min="0" name="bedrooms" placeholder="2" step="1" type="number" />
+              </label>
+              <label>
+                Bathrooms
+                <input min="0" name="bathrooms" placeholder="1" step="0.5" type="number" />
+              </label>
+            </div>
             <label>
               Notes
               <textarea name="notes" placeholder="Access notes, parking, preferred clean details" rows={3} />

@@ -31,9 +31,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             Accounts must be verified by Agatha Living admin staff. Cleaner login also needs the same email saved on the cleaner profile, dashboard login allowed, and the email confirmed.
           </div>
         ) : null}
-        <Link className="button primary" href="/">
-          Back to app
-        </Link>
       </section>
     </main>
   );

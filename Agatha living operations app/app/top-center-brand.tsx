@@ -19,7 +19,7 @@ export function TopCenterBrand({ href, label }: TopCenterBrandProps) {
       const nextY = window.scrollY;
       const shouldHide = nextY > 80 && nextY > lastY;
       brandElement?.classList.toggle("hidden", shouldHide);
-      document.querySelectorAll<HTMLElement>(".admin-menu, .profile-menu, .cleaner-profile-menu, .notification-button").forEach((element) => {
+      document.querySelectorAll<HTMLElement>(".admin-menu, .profile-menu, .cleaner-profile-menu, .notification-menu, .cleaner-notification-button").forEach((element) => {
         element.classList.toggle("hidden", shouldHide);
       });
       lastY = nextY;
@@ -29,7 +29,7 @@ export function TopCenterBrand({ href, label }: TopCenterBrandProps) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       brandElement?.classList.remove("hidden");
-      document.querySelectorAll<HTMLElement>(".admin-menu, .profile-menu, .cleaner-profile-menu, .notification-button").forEach((element) => {
+      document.querySelectorAll<HTMLElement>(".admin-menu, .profile-menu, .cleaner-profile-menu, .notification-menu, .cleaner-notification-button").forEach((element) => {
         element.classList.remove("hidden");
       });
     };

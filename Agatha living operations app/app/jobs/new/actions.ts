@@ -25,13 +25,44 @@ export async function createCleaningJob(formData: FormData) {
     return;
   }
 
-  const { data: cleanerConflict } = await supabase
-    .from("cleaning_jobs")
+  const { data: checkoutBooking } = await supabase
+    .from("bookings")
     .select("id")
-    .eq("cleaner_id", cleanerId)
-    .eq("job_date", jobDate)
-    .neq("status", "cancelled")
-    .limit(1);
+    .eq("property_id", propertyId)
+    .eq("check_out_date", jobDate)
+    .order("check_out_date", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (!checkoutBooking) {
+    redirect(`/jobs/new?conflict=${encodeURIComponent("Cleaning jobs can only be created on a booking checkout date for that property.")}`);
+  }
+
+  const [{ data: bookingConflict }, { data: propertyConflict }, { data: cleanerConflict }] = await Promise.all([
+    supabase.from("cleaning_jobs").select("id").eq("booking_id", checkoutBooking.id).neq("status", "cancelled").limit(1),
+    supabase
+      .from("cleaning_jobs")
+      .select("id")
+      .eq("property_id", propertyId)
+      .eq("job_date", jobDate)
+      .neq("status", "cancelled")
+      .limit(1),
+    supabase
+      .from("cleaning_jobs")
+      .select("id")
+      .eq("cleaner_id", cleanerId)
+      .eq("job_date", jobDate)
+      .neq("status", "cancelled")
+      .limit(1)
+  ]);
+
+  if (bookingConflict?.[0]) {
+    redirect(`/jobs/new?conflict=${encodeURIComponent("This checkout already has a cleaning job.")}`);
+  }
+
+  if (propertyConflict?.[0]) {
+    redirect(`/jobs/new?conflict=${encodeURIComponent("This property already has a cleaning job on that checkout date.")}`);
+  }
 
   if (cleanerConflict?.[0]) {
     redirect(`/jobs/new?conflict=${encodeURIComponent("This cleaner already has another job on that date.")}`);
@@ -61,6 +92,7 @@ export async function createCleaningJob(formData: FormData) {
     .from("cleaning_jobs")
     .insert({
       property_id: propertyId,
+      booking_id: checkoutBooking.id,
       cleaner_id: cleanerId,
       job_date: jobDate,
       duration_minutes: Number.isFinite(durationMinutes) ? durationMinutes : 180,

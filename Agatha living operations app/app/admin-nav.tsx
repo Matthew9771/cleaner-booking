@@ -45,6 +45,17 @@ export async function AdminNav({ active }: AdminNavProps) {
         .select("id", { count: "exact", head: true })
         .or(`status.eq.ready_for_review,status.eq.declined,and(status.eq.offered,job_date.lte.${today}),and(status.eq.completed,cleaner_paid_at.is.null)`)
     : { count: 0 };
+  const { data: notificationJobs } = user
+    ? await supabase
+        .from("cleaning_jobs")
+        .select("id, job_date, status, cleaner_paid_at, properties(name), cleaners(name)")
+        .in("status", ["offered", "ready_for_review", "completed", "declined"])
+        .order("job_date", { ascending: true })
+        .limit(40)
+    : { data: [] };
+  const notificationItems = (notificationJobs ?? [])
+    .filter((job) => job.status === "ready_for_review" || job.status === "declined" || (job.status === "offered" && job.job_date <= today) || (job.status === "completed" && !job.cleaner_paid_at))
+    .slice(0, 5);
 
   return (
     <>
@@ -79,10 +90,32 @@ export async function AdminNav({ active }: AdminNavProps) {
           ))}
         </nav>
       </details>
-      <Link className={`notification-button${active === "notifications" ? " active" : ""}`} href="/notifications" aria-label="Notifications">
-        <Bell aria-hidden="true" />
-        {notificationCount ? <span className="notification-badge">{notificationCount > 9 ? "9+" : notificationCount}</span> : null}
-      </Link>
+      <details className="notification-menu">
+        <summary className={`notification-button${active === "notifications" ? " active" : ""}`} aria-label="Notifications">
+          <Bell aria-hidden="true" />
+          {notificationCount ? <span className="notification-badge">{notificationCount > 9 ? "9+" : notificationCount}</span> : null}
+        </summary>
+        <div className="notification-menu-panel">
+          <div className="notification-menu-heading">
+            <span>Notifications</span>
+            <strong>{notificationCount ?? 0}</strong>
+          </div>
+          {notificationItems.map((job) => {
+            const property = Array.isArray(job.properties) ? job.properties[0] : job.properties;
+            const cleaner = Array.isArray(job.cleaners) ? job.cleaners[0] : job.cleaners;
+            const label = job.status === "ready_for_review" ? "Verify clean" : job.status === "declined" ? "Reassign cleaner" : job.status === "completed" ? "Mark payment" : "Chase reply";
+
+            return (
+              <Link className="notification-menu-item" href={`/jobs/${job.id}`} key={job.id}>
+                <strong>{label}</strong>
+                <span>{property?.name ?? "Property"} · {cleaner?.name ?? "No cleaner"}</span>
+              </Link>
+            );
+          })}
+          {!notificationItems.length ? <p className="notification-menu-empty">No admin notifications right now.</p> : null}
+          <Link className="notification-menu-all" href="/notifications">View all notifications</Link>
+        </div>
+      </details>
       <details className="profile-menu">
         <summary className="profile-button" aria-label="Admin profile menu">
           {profile?.avatar_url ? <Image alt="" height={38} src={profile.avatar_url} unoptimized width={38} /> : <UserRound aria-hidden="true" />}

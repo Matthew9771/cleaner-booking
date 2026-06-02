@@ -113,7 +113,8 @@ a {
 
 .admin-menu.hidden,
 .profile-menu.hidden,
-.notification-button.hidden {
+.notification-menu.hidden,
+.cleaner-notification-button.hidden {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-14px);
@@ -121,7 +122,8 @@ a {
 
 .admin-menu,
 .profile-menu,
-.notification-button {
+.notification-menu,
+.cleaner-notification-button {
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
@@ -1436,7 +1438,7 @@ h1 {
 }
 
 .available-dot {
-  background: #f9f8f4;
+  background: #58b368;
 }
 
 .selected-dot {
@@ -1559,8 +1561,9 @@ h1 {
 }
 
 .booking-calendar-day.available {
-  background: #f4f1ea;
-  color: #5d554b;
+  background: #dff4e4;
+  border-color: #58b368;
+  color: #174924;
 }
 
 .booking-calendar-day.selected {
@@ -1696,11 +1699,19 @@ h1 {
   z-index: 55;
 }
 
-.notification-button {
+.notification-menu {
   position: fixed;
   top: max(18px, env(safe-area-inset-top));
   right: calc(max(18px, env(safe-area-inset-right)) + 56px);
   z-index: 55;
+}
+
+.notification-menu[open] {
+  z-index: 72;
+}
+
+.notification-button {
+  position: relative;
   display: inline-grid;
   place-items: center;
   width: 46px;
@@ -1711,6 +1722,12 @@ h1 {
   box-shadow: var(--shadow-tight);
   color: var(--text);
   backdrop-filter: blur(14px);
+  cursor: pointer;
+  list-style: none;
+}
+
+.notification-button::-webkit-details-marker {
+  display: none;
 }
 
 .notification-button.active {
@@ -1725,7 +1742,10 @@ h1 {
 }
 
 .cleaner-notification-button {
+  position: fixed;
+  top: max(18px, env(safe-area-inset-top));
   right: calc(max(18px, env(safe-area-inset-right)) + 56px);
+  z-index: 55;
 }
 
 .notification-badge {
@@ -1743,6 +1763,75 @@ h1 {
   color: #fff;
   font-size: 0.68rem;
   font-weight: 950;
+}
+
+.notification-menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 2;
+  display: grid;
+  gap: 8px;
+  width: min(300px, calc(100vw - 24px));
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.notification-menu-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notification-menu-heading strong {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  background: #c93d2c;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.74rem;
+}
+
+.notification-menu-item,
+.notification-menu-all {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  background: #fffaf1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.notification-menu-item strong {
+  font-size: 0.9rem;
+}
+
+.notification-menu-item span,
+.notification-menu-empty {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.notification-menu-all {
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-align: center;
 }
 
 .cleaner-profile-menu {

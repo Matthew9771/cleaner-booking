@@ -10,6 +10,7 @@ type CalendarDay = {
 
 type CalendarJob = {
   id: string;
+  booking_id: string | null;
   job_date: string;
   payment_pence: number;
   public_offer_token: string;
@@ -56,17 +57,18 @@ export function CleanerCalendarPicker({ days, jobs, unavailableDates, cleanerId,
   const [selectedDate, setSelectedDate] = useState(initialDate);
   const unavailableSet = useMemo(() => new Set(unavailableDates), [unavailableDates]);
   const oneOffUnavailableSet = useMemo(() => new Set(oneOffUnavailableDates), [oneOffUnavailableDates]);
+  const visibleJobs = useMemo(() => jobs.filter((job) => job.cleaner_id === cleanerId || (!job.cleaner_id && Boolean(job.booking_id))), [jobs, cleanerId]);
   const jobsByDay = useMemo(() => {
     const map = new Map<string, CalendarJob[]>();
 
-    for (const job of jobs) {
+    for (const job of visibleJobs) {
       map.set(job.job_date, [...(map.get(job.job_date) ?? []), job]);
     }
 
     return map;
-  }, [jobs]);
-  const assignedJobs = jobs.filter((job) => job.cleaner_id === cleanerId);
-  const availableJobs = jobs.filter((job) => !job.cleaner_id && !unavailableSet.has(job.job_date));
+  }, [visibleJobs]);
+  const assignedJobs = visibleJobs.filter((job) => job.cleaner_id === cleanerId);
+  const availableJobs = visibleJobs.filter((job) => !job.cleaner_id && Boolean(job.booking_id) && !unavailableSet.has(job.job_date));
   const nextJobs = [...assignedJobs, ...availableJobs].sort((a, b) => a.job_date.localeCompare(b.job_date)).slice(0, 8);
   const selectedJobs = jobsByDay.get(selectedDate) ?? [];
   const selectedUnavailable = unavailableSet.has(selectedDate);
