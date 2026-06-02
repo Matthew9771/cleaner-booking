@@ -1,6 +1,7 @@
 [build]
-command = "cd 'Agatha living operations app' && npm run build"
-publish = "Agatha living operations app/.next"
+base = "Agatha living operations app"
+command = "npm run build"
+publish = ".next"
 
 [build.environment]
 NODE_VERSION = "20"
