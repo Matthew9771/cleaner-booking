@@ -7,10 +7,11 @@ import { createClient } from "@/lib/supabase/browser";
 type Mode = "sign-in" | "sign-up";
 
 type LoginFormProps = {
+  allowSignUp?: boolean;
   portal?: "admin" | "cleaner";
 };
 
-export function LoginForm({ portal = "admin" }: LoginFormProps) {
+export function LoginForm({ allowSignUp = false, portal = "admin" }: LoginFormProps) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("sign-in");
   const [fullName, setFullName] = useState("");
@@ -20,7 +21,7 @@ export function LoginForm({ portal = "admin" }: LoginFormProps) {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    if (mode === "sign-in") {
+    if (mode === "sign-in" || !allowSignUp) {
       return;
     }
 
@@ -96,24 +97,26 @@ export function LoginForm({ portal = "admin" }: LoginFormProps) {
     <form action="/login/submit" className="auth-form" method="post" onSubmit={handleSubmit}>
       <input name="portal" type="hidden" value={portal} />
       <input name="mode" type="hidden" value={mode} />
-      <div className="segmented-control" aria-label="Login mode">
-        <button
-          aria-pressed={mode === "sign-in"}
-          type="button"
-          onClick={() => setMode("sign-in")}
-        >
-          Sign in
-        </button>
-        <button
-          aria-pressed={mode === "sign-up"}
-          type="button"
-          onClick={() => setMode("sign-up")}
-        >
-          Create account
-        </button>
-      </div>
+      {allowSignUp ? (
+        <div className="segmented-control" aria-label="Login mode">
+          <button
+            aria-pressed={mode === "sign-in"}
+            type="button"
+            onClick={() => setMode("sign-in")}
+          >
+            Sign in
+          </button>
+          <button
+            aria-pressed={mode === "sign-up"}
+            type="button"
+            onClick={() => setMode("sign-up")}
+          >
+            Create account
+          </button>
+        </div>
+      ) : null}
 
-      {mode === "sign-up" ? (
+      {allowSignUp && mode === "sign-up" ? (
         <label>
           Full name
           <input

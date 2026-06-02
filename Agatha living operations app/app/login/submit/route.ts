@@ -44,7 +44,15 @@ export async function POST(request: Request) {
       redirect("/cleaner");
     }
 
-    const { data: profile } = await supabase.from("profiles").select("role").eq("id", userId).maybeSingle();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, approved_by_admin")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (!profile || !profile.approved_by_admin) {
+      loginRedirect(portal, "Your account is waiting for admin approval.");
+    }
 
     if (profile?.role === "cleaner" || portal === "cleaner") {
       redirect("/cleaner");

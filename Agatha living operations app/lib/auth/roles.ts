@@ -11,9 +11,27 @@ export async function getSignedInUserAndRole() {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase.from("profiles").select("role, full_name").eq("id", user.id).maybeSingle();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, full_name, approved_by_admin")
+    .eq("id", user.id)
+    .maybeSingle();
 
-  return { supabase, user, role: profile?.role ?? "admin", profile };
+  if (!profile || !profile.approved_by_admin) {
+    redirect("/login?error=Your account is waiting for admin approval.");
+  }
+
+  return { supabase, user, role: profile.role, profile };
+}
+
+export async function requireAdmin() {
+  const { supabase, user, role, profile } = await getSignedInUserAndRole();
+
+  if (role !== "admin") {
+    redirect("/cleaner");
+  }
+
+  return { supabase, user, role, profile };
 }
 
 export async function requireCleaner() {

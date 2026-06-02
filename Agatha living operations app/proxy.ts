@@ -82,8 +82,20 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
-  const role = profile?.role ?? "admin";
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, approved_by_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (!profile || !profile.approved_by_admin) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.searchParams.set("error", "Your account is waiting for admin approval.");
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const role = profile.role;
 
   if (pathname.startsWith("/cleaner") && role !== "cleaner") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
