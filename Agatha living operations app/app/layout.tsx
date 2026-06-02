@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { Viewport } from "next";
-import { AppFooter } from "./app-footer";
 import { NavCloseOnOutside } from "./nav-close-on-outside";
+import { RouteAwareFooter } from "./route-aware-footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function RootLayout({
       <body>
         <NavCloseOnOutside />
         {children}
-        <AppFooter />
+        <RouteAwareFooter />
       </body>
     </html>
   );
