@@ -1,0 +1,7 @@
+{
+  "name": "agatha-living-property-operations",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix \"Agatha living operations app\" ci && npm --prefix \"Agatha living operations app\" run build"
+  }
+}
