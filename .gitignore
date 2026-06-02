@@ -1,6 +1,7 @@
 node_modules
 .npm-cache
 .next
+.next*
 .next-local
 out
 .env

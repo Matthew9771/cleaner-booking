@@ -1,7 +1,28 @@
 {
-  "name": "agatha-living-property-operations",
+  "name": "agatha-living-operations-app",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "npm --prefix \"Agatha living operations app\" ci && npm --prefix \"Agatha living operations app\" run build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint app lib next.config.ts proxy.ts eslint.config.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "lucide-react": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "typescript": "latest"
   }
 }
