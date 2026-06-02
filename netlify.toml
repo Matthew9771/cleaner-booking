@@ -5,6 +5,9 @@ publish = ".next"
 [build.environment]
 NODE_VERSION = "20"
 
+[[plugins]]
+package = "@netlify/plugin-nextjs"
+
 # Required environment variables for Supabase
 # Add these in Netlify Site Settings -> Environment
 # NEXT_PUBLIC_SUPABASE_URL=https://mlxnmoynftzslhoghbfd.supabase.co
